@@ -1,0 +1,1 @@
+Assets reais do Luiz serão adicionados aqui antes do merge desta branch. Os nomes esperados pelo front são: team-carvalho.webp, luiz-hero.webp, luiz-personal.webp e luiz-atleta.webp.
