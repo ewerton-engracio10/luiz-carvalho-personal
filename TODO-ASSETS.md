@@ -1,0 +1,1 @@
+A branch de build paralelo já contém a implementação estrutural do site. Antes do merge, substituir os paths de imagens pelos arquivos reais fornecidos pelo usuário, mantendo a identidade aprovada.
