@@ -1,0 +1,1 @@
+Build paralelo em andamento nesta branch. Arquivos HTML/CSS/JS já implementados; assets reais do Luiz serão vinculados nesta mesma branch antes do merge.
