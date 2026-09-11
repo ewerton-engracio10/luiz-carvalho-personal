@@ -1,0 +1,1 @@
+Assets oficiais do projeto Luiz Carvalho. Imagens reais e logos fornecidos pelo cliente serão adicionados nesta pasta.
