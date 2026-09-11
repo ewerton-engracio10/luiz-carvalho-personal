@@ -1,1 +1,0 @@
-Logo oficial Team Carvalho: utilizar a variação fornecida pelo usuário; não redesenhar nem reinterpretar.
