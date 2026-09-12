@@ -1,0 +1,10 @@
+{
+  "name": "luiz-carvalho-personal",
+  "private": true,
+  "scripts": {
+    "build": "node build-images.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.34.3"
+  }
+}
