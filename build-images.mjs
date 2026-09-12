@@ -30,7 +30,6 @@ async function processHero(input, output) {
   const meta = await sharp(input).metadata();
   if (!meta.width || !meta.height) throw new Error('Hero sem dimensões válidas');
 
-  // Remove a faixa lateral clara e a faixa inferior com elementos da interface social.
   const left = Math.max(0, Math.round(meta.width * 0.025));
   const bottomCut = Math.max(1, Math.round(meta.height * 0.12));
   const width = meta.width - left;
@@ -39,19 +38,18 @@ async function processHero(input, output) {
   await sharp(input)
     .extract({ left, top: 0, width, height })
     .resize({ width: 1000, withoutEnlargement: false, kernel: sharp.kernel.lanczos3 })
-    .sharpen({ sigma: 0.55 })
+    .sharpen({ sigma: 0.45 })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toFile(output);
 }
 
 async function processLogo(input, output) {
   const { data, info } = await sharp(input)
-    .resize({ width: 1200, withoutEnlargement: false, kernel: sharp.kernel.lanczos3 })
+    .resize({ width: 1400, withoutEnlargement: false, kernel: sharp.kernel.lanczos3 })
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  // Remove somente o fundo preto/nearly-black, preservando o desenho oficial.
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
     const g = data[i + 1];
@@ -66,7 +64,7 @@ async function processLogo(input, output) {
   }
 
   await sharp(data, { raw: info })
-    .sharpen({ sigma: 0.45 })
+    .sharpen({ sigma: 0.35 })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toFile(output);
 }
@@ -76,37 +74,33 @@ for (const file of assetFiles) {
   const input = path.join(SRC_ASSETS, file);
   const ext = path.extname(file).toLowerCase();
   const base = path.basename(file, ext);
+
+  if (!['.webp', '.jpg', '.jpeg', '.png'].includes(ext)) continue;
+
   const output = path.join(DIST_ASSETS, `${base}.png`);
-
-  if (!['.webp', '.jpg', '.jpeg', '.png'].includes(ext)) {
-    await fs.copyFile(input, path.join(DIST_ASSETS, file));
-    continue;
-  }
-
-  console.log(`Convertendo ${file} -> ${base}.png`);
+  console.log(`Publicando ${base}.png`);
 
   if (base === 'luiz-hero') await processHero(input, output);
   else if (base === 'team-carvalho') await processLogo(input, output);
   else await normalizeImage(input, output);
 }
 
-// Regra obrigatória do projeto: toda imagem publicada deve ser PNG real.
 const publishedAssets = await fs.readdir(DIST_ASSETS);
 for (const file of publishedAssets) {
-  if (!/\.(png)$/i.test(file)) {
+  if (!file.toLowerCase().endsWith('.png')) {
     throw new Error(`Asset publicado fora do padrão PNG: ${file}`);
   }
   const meta = await sharp(path.join(DIST_ASSETS, file)).metadata();
   if (meta.format !== 'png') {
-    throw new Error(`Arquivo ${file} não é PNG verdadeiro (formato detectado: ${meta.format})`);
+    throw new Error(`Arquivo ${file} não é PNG verdadeiro`);
   }
 }
 
 for (const file of ['index.html', 'styles.css']) {
   const content = await fs.readFile(path.join(DIST, file), 'utf8');
   if (/\.(webp|jpe?g)/i.test(content)) {
-    throw new Error(`Referência de imagem não-PNG encontrada em ${file}`);
+    throw new Error(`Referência não-PNG encontrada em ${file}`);
   }
 }
 
-console.log('Build concluído e validado: todas as imagens publicadas são PNG verdadeiro.');
+console.log('Build concluído: todas as imagens publicadas são PNG verdadeiro.');
