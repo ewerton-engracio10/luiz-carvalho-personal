@@ -1,1 +1,0 @@
-Temporary marker for PNG asset correction. Safe to remove after final commit.
