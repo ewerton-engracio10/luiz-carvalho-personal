@@ -17,6 +17,22 @@ for (const file of ['index.html', 'styles.css', 'script.js']) {
   await fs.writeFile(path.join(DIST, file), content, 'utf8');
 }
 
+async function normalizeImage(input, output) {
+  const raw = await fs.readFile(input);
+  try {
+    await sharp(raw).png({ compressionLevel: 9, adaptiveFiltering: true }).toFile(output);
+    return;
+  } catch (firstError) {
+    const text = raw.toString('utf8').replace(/\s+/g, '');
+    if (/^[A-Za-z0-9+/=]+$/.test(text) && text.length > 32) {
+      const decoded = Buffer.from(text, 'base64');
+      await sharp(decoded).png({ compressionLevel: 9, adaptiveFiltering: true }).toFile(output);
+      return;
+    }
+    throw firstError;
+  }
+}
+
 const assetFiles = await fs.readdir(SRC_ASSETS);
 for (const file of assetFiles) {
   const input = path.join(SRC_ASSETS, file);
@@ -24,9 +40,8 @@ for (const file of assetFiles) {
   const base = path.basename(file, ext);
 
   if (ext === '.webp' || ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
-    await sharp(input)
-      .png({ compressionLevel: 9, adaptiveFiltering: true })
-      .toFile(path.join(DIST_ASSETS, `${base}.png`));
+    console.log(`Convertendo ${file} -> ${base}.png`);
+    await normalizeImage(input, path.join(DIST_ASSETS, `${base}.png`));
   } else {
     await fs.copyFile(input, path.join(DIST_ASSETS, file));
   }
