@@ -8,18 +8,10 @@ for (const file of ['index.html', 'styles.css', 'script.js']) {
   await copyFile(file, `dist/${file}`);
 }
 
-// Mantém o arquivo oficial intacto para o restante do site.
+// Logos oficiais em PNG válido. Nenhum processamento visual da marca no build.
 await copyFile('assets/team-carvalho.png', 'dist/assets/team-carvalho.png');
+await copyFile('assets/team-carvalho-header.png', 'dist/assets/team-carvalho-header.png');
 await copyFile('assets/team-carvalho.png', 'dist/assets/favicon.png');
-
-// Cabeçalho: usa o próprio logo oficial, remove somente a margem transparente
-// e gera um PNG dedicado com proporção natural. Não redesenha nem altera a marca.
-await sharp('assets/team-carvalho.png')
-  .ensureAlpha()
-  .trim({ threshold: 10 })
-  .resize({ height: 52, fit: 'inside', withoutEnlargement: false })
-  .png({ compressionLevel: 9, adaptiveFiltering: true })
-  .toFile('dist/assets/team-carvalho-header.png');
 
 const images = [
   ['image_sources/hero.avif', 'dist/assets/luiz-hero.png'],
@@ -32,8 +24,7 @@ for (const [input, output] of images) {
   await sharp(input).png({ compressionLevel: 9, adaptiveFiltering: true }).toFile(output);
 }
 
-// O logo do header deve respeitar sua proporção real; não deve ser espremido
-// em uma caixa fixa. As regras abaixo entram por último e prevalecem no desktop/mobile.
+// O logo do cabeçalho respeita a proporção natural e nunca é espremido.
 await appendFile('dist/styles.css', `
 .brand{display:flex!important;align-items:center!important;justify-content:flex-start!important;height:70px!important;overflow:visible!important}
 .brand img{display:block!important;width:auto!important;height:52px!important;max-width:220px!important;object-fit:contain!important;object-position:left center!important;background:transparent!important;flex:0 0 auto!important}
@@ -42,7 +33,7 @@ await appendFile('dist/styles.css', `
 @media(max-width:520px){.brand img{width:auto!important;height:42px!important;max-width:165px!important}}
 `);
 
-// Quebra o cache do navegador para o arquivo corrigido do cabeçalho.
+// Cache-bust do logo corrigido.
 const indexPath = 'dist/index.html';
 const indexHtml = await readFile(indexPath, 'utf8');
 await writeFile(indexPath, indexHtml.replaceAll('v=20260913-3', 'v=20260913-4'));
