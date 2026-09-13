@@ -9,6 +9,7 @@ for (const file of ['index.html', 'styles.css', 'script.js']) {
 }
 
 await copyFile('assets/team-carvalho.png', 'dist/assets/team-carvalho.png');
+await copyFile('assets/team-carvalho-header.png', 'dist/assets/team-carvalho-header.png');
 await copyFile('assets/team-carvalho.png', 'dist/assets/favicon.png');
 
 const images = [
