@@ -19,6 +19,9 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// Remove a linha redundante com o @ do Instagram na CTA final.
+document.querySelector('.cta-handle')?.remove();
+
 const sections = [...document.querySelectorAll('main section[id], header[id]')];
 const links = [...document.querySelectorAll('.nav a')];
 window.addEventListener('scroll', () => {
