@@ -66,32 +66,88 @@ await appendFile('dist/styles.css', `
 }
 
 @media(max-width:900px){
-  .brand{height:60px!important}.brand img{width:auto!important;height:44px!important;max-width:180px!important}
+  /* Cabeçalho e eixo horizontal únicos no mobile. */
+  .site-header{padding-left:24px!important;padding-right:24px!important}
+  .brand{height:60px!important}
+  .brand img{width:auto!important;height:44px!important;max-width:180px!important}
   #sobre,#treine,#atleta,#contato{scroll-margin-top:78px}
+
+  /* Todas as áreas de texto seguem a mesma margem lateral. */
+  .hero-copy,.about-copy,.train-copy,.athlete-copy,.cta-content{padding-left:24px!important;padding-right:24px!important;min-width:0!important}
+  .hero-copy{padding-top:40px!important;padding-bottom:48px!important}
+  .about-copy{padding-top:42px!important;padding-bottom:46px!important}
+  .train-copy{padding-top:44px!important;padding-bottom:46px!important}
+  .athlete-copy{padding-top:42px!important;padding-bottom:48px!important;max-width:none!important}
+  .cta-content{padding-top:50px!important;padding-bottom:52px!important;text-align:center!important}
+
+  /* No mobile os textos fluem naturalmente; quebras manuais ficam apenas no desktop. */
+  .hero-text br,.section-text br,.train-copy>p br,.athlete-copy>p br{display:none!important}
+  .hero-text,.section-text,.train-copy>p:not(.eyebrow),.athlete-copy>p:not(.eyebrow){max-width:none!important;line-height:1.55!important}
+
+  /* Hero mantém presença visual do desktop, sem deslocamento lateral. */
+  .hero{grid-template-columns:1fr!important;min-height:auto!important}
+  .hero-photo{height:62svh!important;min-height:470px!important;max-height:650px!important;padding:0!important}
+  .hero-photo img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center bottom!important}
+  .hero-copy .btn{width:100%!important;max-width:390px!important}
+  .hero-mantra{display:none!important}
+
+  /* Sobre: foto e conteúdo usam a mesma largura e ritmo vertical. */
+  .about{grid-template-columns:1fr!important}
+  .about-photo{min-height:460px!important}
   .about-photo img{object-position:72% top!important;transform:none!important}
+  .feature-grid{grid-template-columns:1fr!important;padding-top:16px!important}
+  .feature{padding:16px 0!important;border-right:0!important}
+
+  /* Serviços: conteúdo primeiro, imagem depois, sem coluna decorativa estreita. */
+  .train{grid-template-columns:1fr!important;min-height:auto!important}
+  .train-copy{order:1!important}
+  .train-photo{order:2!important;min-height:430px!important;height:56svh!important;max-height:610px!important}
+  .train-photo img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important}
+  .side-copy{display:none!important}
+  .train-copy .btn{width:100%!important;max-width:390px!important}
+
+  /* Atleta: mesma lógica de leitura das demais seções. */
   .athlete{grid-template-columns:1fr!important;min-height:auto!important}
-  .athlete-photo{min-height:500px!important;height:68vh!important;max-height:650px!important}
+  .athlete-photo{min-height:500px!important;height:68svh!important;max-height:650px!important}
   .athlete-photo img{object-position:62% top!important;transform:scale(1.06)!important;transform-origin:center top!important}
   .athlete-photo:before{height:18%!important}
-  .athlete-copy{padding:42px 24px 48px!important;max-width:none!important;min-width:0!important}
   .athlete h2{font-size:clamp(45px,13vw,72px)!important}
-  .athlete-copy>p:not(.eyebrow){max-width:none!important}
+  .athlete-tags{display:flex!important;align-items:flex-start!important;justify-content:flex-start!important;gap:28px!important;flex-wrap:wrap!important;margin-top:30px!important}
+
+  /* CTA preserva o centro visual do desktop e elimina a coluna decorativa no mobile. */
+  .cta{grid-template-columns:1fr!important;min-height:360px!important}
+  .cta-note{display:none!important}
+  .cta-content .btn{width:100%!important;max-width:390px!important}
+
+  .btn{max-width:100%!important}
 }
 
 @media(max-width:520px){
+  .site-header{padding-left:20px!important;padding-right:20px!important}
   .brand img{width:auto!important;height:42px!important;max-width:165px!important}
+  .hero-copy,.about-copy,.train-copy,.athlete-copy,.cta-content{padding-left:20px!important;padding-right:20px!important}
+
+  .hero-photo{height:58svh!important;min-height:420px!important;max-height:560px!important}
+  .about-photo{min-height:420px!important}
   .about-photo img{object-position:70% top!important;transform:none!important}
-  .athlete-photo{min-height:450px!important;height:60vh!important}
+  .train-photo{min-height:390px!important;height:52svh!important;max-height:520px!important}
+
+  .athlete-photo{min-height:450px!important;height:60svh!important;max-height:560px!important}
   .athlete-photo img{object-position:60% top!important;transform:scale(1.04)!important}
-  .athlete-copy{padding:38px 20px 44px!important}
+  .athlete-copy{padding-top:38px!important;padding-bottom:44px!important}
+  .athlete-tags{width:100%!important;gap:10px!important;justify-content:space-between!important;flex-wrap:nowrap!important}
+  .athlete-tags span{flex:1 1 0!important;min-width:0!important}
+
+  .feature{gap:14px!important}
+  .cta-content{padding-top:46px!important;padding-bottom:48px!important}
 }
 `);
 
 // Cache-bust e limpeza estrutural da seção Atleta no HTML publicado.
 const indexPath = 'dist/index.html';
 let indexHtml = await readFile(indexPath, 'utf8');
-indexHtml = indexHtml.replaceAll('v=20260913-3', 'v=20260913-5');
-indexHtml = indexHtml.replace('/styles.css', '/styles.css?v=20260913-3');
+indexHtml = indexHtml.replaceAll('v=20260913-3', 'v=20260913-6');
+indexHtml = indexHtml.replace('/styles.css', '/styles.css?v=20260913-6');
 indexHtml = indexHtml.replace(
   '<div class="athlete-side reveal delay-2"><div class="athlete-silhouette"><img src="/assets/luiz-atleta-2.png" alt="" /></div><div class="script small">Mesma<br />Disciplina<br />Novos<br />Resultados</div></div>',
   ''
