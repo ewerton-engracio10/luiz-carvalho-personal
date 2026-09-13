@@ -38,7 +38,7 @@ document.querySelectorAll('img[src="/assets/team-carvalho.png"]').forEach((img) 
   img.src = '/assets/team-carvalho.png?v=20260913-2';
 });
 
-// Ajustes finos do hero em desktop para manter todo o conteúdo dentro da tela.
+// Ajustes finos de responsividade, mantendo desktop e mobile tratados separadamente.
 const layoutFix = document.createElement('style');
 layoutFix.textContent = `
 @media (min-width: 901px) {
@@ -135,6 +135,57 @@ layoutFix.textContent = `
 
   .ig-line {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .about {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .about-copy {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 22px;
+    padding-right: 22px;
+    overflow: hidden;
+  }
+
+  .about h2 {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    font-size: clamp(38px, 11.5vw, 50px);
+    line-height: .9;
+    letter-spacing: -.012em;
+    white-space: nowrap;
+  }
+
+  .about .section-text {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    padding-right: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .about .feature-grid,
+  .about .feature {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .about h2 {
+    font-size: 10.9vw;
+    letter-spacing: -.018em;
   }
 }
 `;
